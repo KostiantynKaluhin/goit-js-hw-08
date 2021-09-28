@@ -95,3 +95,36 @@ const createImageGalleryItemMarkup = pictures => {
 const imageGalleryItemMarkup = createImageGalleryItemMarkup(galleryItems);
 
 refs.imageGalleryList.insertAdjacentHTML('beforeend', imageGalleryItemMarkup);
+
+refs.imageGalleryList.addEventListener('click', onImageClick);
+refs.button.addEventListener('click', onModalClose);
+refs.overlay.addEventListener('click', onModalBackdropClose);
+
+let currentImgIdx = null;
+
+function onImageClick(event) {
+  event.preventDefault();
+  const { dataset, alt, nodeName } = event.target;
+  if (nodeName !== 'IMG') return;
+  onModalOpen(dataset.source, alt);
+}
+
+function onModalOpen(source, alt) {
+  refs.modal.classList.add('is-open');
+  refs.lightbox.src = source;
+  refs.lightbox.alt = alt;
+  window.addEventListener('keydown', onKeypress);
+}
+
+function onModalClose() {
+  refs.modal.classList.remove('is-open');
+  refs.lightbox.src = '';
+  refs.lightbox.alt = '';
+  window.removeEventListener('keydown', onKeypress);
+}
+
+function onModalBackdropClose(event) {
+  if (event.currentTarget === event.target) {
+    onModalClose();
+  }
+}
