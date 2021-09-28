@@ -128,3 +128,34 @@ function onModalBackdropClose(event) {
     onModalClose();
   }
 }
+
+function findIndex() {
+  return galleryItems.findIndex(
+    ({ original }) => original === refs.lightbox.src,
+  );
+}
+
+function onNextImage() {
+  currentImgIdx = findIndex();
+  currentImgIdx =
+    galleryItems.length - 1 === currentImgIdx ? 0 : currentImgIdx + 1;
+  const { original, description } = galleryItems[currentImgIdx];
+  refs.lightbox.src = original;
+  refs.lightbox.alt = description;
+}
+
+function onPrevImage() {
+  currentImgIdx = findIndex();
+  currentImgIdx =
+    currentImgIdx === 0 ? galleryItems.length - 1 : currentImgIdx - 1;
+  const { original, description } = galleryItems[currentImgIdx];
+  refs.lightbox.src = original;
+  refs.lightbox.alt = description;
+}
+
+function onKeypress(event) {
+  console.log(event.code);
+  event.code === 'Escape' && onModalClose();
+  event.code === 'ArrowRight' && onNextImage();
+  event.code === 'ArrowLeft' && onPrevImage();
+}
